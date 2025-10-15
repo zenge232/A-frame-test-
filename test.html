@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple A-Frame Test</title>
+    <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #000;
+            overflow: hidden;
+        }
+        .test-overlay {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            color: white;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-overlay">
+        <h2>🧪 Simple A-Frame Test</h2>
+        <p>If you can see this text and a rotating cube, A-Frame is working!</p>
+        <p id="status">Loading...</p>
+    </div>
+    
+    <a-scene 
+        vr-mode-ui="enabled: false" 
+        embedded 
+        background="color: #87CEEB">
+        
+        <!-- Simple test cube -->
+        <a-box 
+            position="0 1.6 -3" 
+            rotation="0 45 0" 
+            color="#4CC3D9"
+            animation="property: rotation; to: 0 405 0; loop: true; dur: 10000">
+        </a-box>
+        
+        <!-- Camera -->
+        <a-camera 
+            position="0 1.6 0"
+            look-controls="enabled: true"
+            wasd-controls="enabled: true">
+        </a-camera>
+        
+        <!-- Simple lighting -->
+        <a-light type="ambient" color="#404040" intensity="0.4"></a-light>
+        <a-light type="directional" position="2 4 -2" color="#ffffff" intensity="0.8"></a-light>
+        
+        <!-- Ground -->
+        <a-plane 
+            position="0 0 -4" 
+            rotation="-90 0 0" 
+            width="100" 
+            height="100" 
+            color="#7BC8A4">
+        </a-plane>
+        
+    </a-scene>
+    
+    <script>
+        console.log('Simple A-Frame test loaded!');
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOM loaded');
+            const status = document.querySelector('#status');
+            status.textContent = 'A-Frame test scene loaded successfully!';
+            status.style.color = '#4caf50';
+        });
+        
+        // Listen for scene loaded
+        const scene = document.querySelector('a-scene');
+        scene.addEventListener('loaded', () => {
+            console.log('A-Frame scene loaded successfully!');
+        });
+    </script>
+</body>
+</html>

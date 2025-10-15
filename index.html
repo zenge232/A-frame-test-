@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#87CEEB">
     <title>A-Frame Vite Project</title>
     <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
     <style>
@@ -12,6 +13,10 @@
             font-family: Arial, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             overflow: hidden;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
         
         .ui-overlay {
@@ -23,7 +28,12 @@
             background: rgba(0, 0, 0, 0.7);
             padding: 15px;
             border-radius: 10px;
+            -webkit-backdrop-filter: blur(10px);
             backdrop-filter: blur(10px);
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
         
         .ui-overlay h1 {
@@ -40,26 +50,69 @@
         #scene-container {
             width: 100vw;
             height: 100vh;
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+        }
+        
+        /* Cross-browser compatibility improvements */
+        * {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+        
+        /* Smooth scrolling for webkit browsers */
+        html {
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        /* Better cursor support */
+        .cursor-pointer {
+            cursor: pointer;
+            cursor: -webkit-pointer;
+        }
+        
+        /* Animation performance improvements */
+        a-scene, a-entity, a-sphere, a-box, a-cylinder, a-plane {
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
         }
     </style>
 </head>
 <body>
     <div class="ui-overlay">
-        <h1>A-Frame VR Experience</h1>
+        <h1>🏖️ Beach VR Experience</h1>
         <p>Move around with WASD keys • Look around with mouse • Click to interact</p>
+        <p>🌊 Animated beach scene with ocean waves and palm trees</p>
+        <p id="loading-status">Loading beach scene...</p>
     </div>
     
     <div id="scene-container">
         <a-scene 
             vr-mode-ui="enabled: false" 
             embedded 
-            background="color: #000000"
-            renderer="colorManagement: true; physicallyCorrectLights: true">
+            background="color: #87CEEB"
+            renderer="colorManagement: true; physicallyCorrectLights: true"
+            sky="color: #87CEEB; fog: 0.3; fogColor: #E6F3FF; fogNear: 20; fogFar: 100">
             
             <!-- Assets -->
             <a-assets>
-                <!-- You can add 3D models, textures, and audio files here -->
+                <!-- Retro Sony Alarm Clock GLB Model -->
+                <a-asset-item id="retro-clock" src="./retro_sony_alarm_clock.glb"></a-asset-item>
+                <!-- New GLB Model -->
+                <a-asset-item id="model-7-22-2025" src="./7_22_2025.glb"></a-asset-item>
+                <!-- Shell GLB Model -->
+                <a-asset-item id="shell-model" src="./A shell of irregular size.glb"></a-asset-item>
             </a-assets>
+            
+            <!-- Beautiful Beach Sky -->
+            <a-sky 
+                id="beach-sky"
+                color="#87CEEB"
+                material="shader: flat; side: double">
+            </a-sky>
             
             <!-- Camera -->
             <a-camera 
@@ -70,64 +123,253 @@
                 cursor="rayOrigin: mouse">
             </a-camera>
             
-            <!-- Lighting -->
+            <!-- Beach Lighting -->
             <a-light 
                 type="ambient" 
-                color="#404040" 
-                intensity="0.4">
+                color="#FFE4B5" 
+                intensity="0.6">
             </a-light>
             
             <a-light 
                 type="directional" 
-                position="2 4 -2" 
-                color="#ffffff" 
-                intensity="0.8"
+                position="5 8 -3" 
+                color="#FFFACD" 
+                intensity="1.2"
                 cast-shadow="true">
             </a-light>
             
-            <!-- Ground -->
+            <!-- Sun Light -->
+            <a-light 
+                type="point" 
+                position="10 15 -10" 
+                color="#FFD700" 
+                intensity="0.8"
+                distance="50">
+            </a-light>
+            
+            <!-- Beach Sand -->
             <a-plane 
-                position="0 0 -4" 
+                position="0 -0.1 -4" 
                 rotation="-90 0 0" 
                 width="100" 
                 height="100" 
-                color="#7BC8A4"
+                color="#F4A460"
                 shadow="receive: true">
             </a-plane>
             
-            <!-- Example Objects -->
-            <a-box 
-                position="-1 0.5 -3" 
-                rotation="0 45 0" 
-                color="#4CC3D9"
-                shadow="cast: true"
-                animation="property: rotation; to: 0 405 0; loop: true; dur: 10000">
-            </a-box>
+            <!-- Ocean Water -->
+            <a-plane 
+                position="0 -0.05 -15" 
+                rotation="-90 0 0" 
+                width="100" 
+                height="50" 
+                color="#4682B4"
+                opacity="0.8"
+                transparent="true"
+                animation="property: rotation; to: -90 0 5; direction: alternate; loop: true; dur: 3000; easing: easeInOutSine">
+            </a-plane>
             
+            <!-- Water Foam -->
+            <a-plane 
+                position="0 -0.02 -8" 
+                rotation="-90 0 0" 
+                width="100" 
+                height="10" 
+                color="#FFFFFF"
+                opacity="0.6"
+                transparent="true"
+                animation="property: position; to: 0 -0.02 -7; direction: alternate; loop: true; dur: 2000; easing: easeInOutSine">
+            </a-plane>
+            
+            <!-- Palm Tree 1 -->
+            <a-entity position="-8 0 -2">
+                <a-cylinder 
+                    position="0 2 0" 
+                    radius="0.3" 
+                    height="4" 
+                    color="#8B4513"
+                    shadow="cast: true">
+                </a-cylinder>
+                <a-sphere 
+                    position="0 4.5 0" 
+                    radius="2" 
+                    color="#228B22"
+                    shadow="cast: true"
+                    animation="property: rotation; to: 0 360 0; loop: true; dur: 20000; easing: linear">
+                </a-sphere>
+            </a-entity>
+            
+            <!-- Palm Tree 2 -->
+            <a-entity position="8 0 -1">
+                <a-cylinder 
+                    position="0 2 0" 
+                    radius="0.3" 
+                    height="4" 
+                    color="#8B4513"
+                    shadow="cast: true">
+                </a-cylinder>
+                <a-sphere 
+                    position="0 4.5 0" 
+                    radius="2" 
+                    color="#228B22"
+                    shadow="cast: true"
+                    animation="property: rotation; to: 0 -360 0; loop: true; dur: 25000; easing: linear">
+                </a-sphere>
+            </a-entity>
+            
+            <!-- Beach Rocks -->
             <a-sphere 
-                position="0 1.25 -5" 
-                radius="1.25" 
-                color="#EF2D5E"
-                shadow="cast: true"
-                animation="property: position; to: 0 2.25 -5; direction: alternate; loop: true; dur: 2000">
+                position="-3 0.5 -2" 
+                radius="0.8" 
+                color="#696969"
+                shadow="cast: true">
             </a-sphere>
             
-            <a-cylinder 
-                position="1 0.75 -3" 
+            <a-sphere 
+                position="4 0.3 -1" 
                 radius="0.5" 
-                height="1.5" 
-                color="#FFC65D"
-                shadow="cast: true"
-                animation="property: rotation; to: 0 360 0; loop: true; dur: 8000">
-            </a-cylinder>
+                color="#A9A9A9"
+                shadow="cast: true">
+            </a-sphere>
             
-            <!-- Text -->
+            <!-- Seashells -->
+            <a-sphere 
+                position="-1 0.1 -1" 
+                radius="0.2" 
+                color="#FFE4E1"
+                shadow="cast: true">
+            </a-sphere>
+            
+            <a-sphere 
+                position="2 0.1 -2" 
+                radius="0.15" 
+                color="#FFF8DC"
+                shadow="cast: true">
+            </a-sphere>
+            
+            <!-- Large Shell Model near water's edge -->
+            <a-entity 
+                id="shell-model"
+                gltf-model="#shell-model"
+                position="0 0.1 -6"
+                rotation="0 45 0"
+                scale="2 2 2"
+                shadow="cast: true; receive: true"
+                animation="property: rotation; to: 0 405 0; loop: true; dur: 12000; easing: linear"
+                cursor-listener>
+                
+                <!-- Fallback geometry in case model doesn't load -->
+                <a-sphere 
+                    id="fallback-shell"
+                    visible="false"
+                    position="0 0 0"
+                    radius="1"
+                    color="#FFF8DC"
+                    shadow="cast: true">
+                </a-sphere>
+            </a-entity>
+            
+            <!-- Retro Sony Alarm Clock on Beach -->
+            <a-entity 
+                id="retro-alarm-clock"
+                gltf-model="#retro-clock"
+                position="-2 0.3 -2"
+                rotation="0 15 0"
+                scale="0.8 0.8 0.8"
+                shadow="cast: true; receive: true"
+                animation="property: rotation; to: 0 375 0; loop: true; dur: 15000; easing: linear"
+                cursor-listener>
+                
+                <!-- Fallback geometry in case model doesn't load -->
+                <a-box 
+                    id="fallback-clock"
+                    visible="false"
+                    position="0 0 0"
+                    width="1"
+                    height="0.8"
+                    depth="0.6"
+                    color="#FF6B6B"
+                    shadow="cast: true">
+                </a-box>
+            </a-entity>
+            
+            <!-- New GLB Model on Beach -->
+            <a-entity 
+                id="model-7-22-2025"
+                gltf-model="#model-7-22-2025"
+                position="2 0.3 -2"
+                rotation="0 -15 0"
+                scale="1 1 1"
+                shadow="cast: true; receive: true"
+                animation="property: rotation; to: 0 -345 0; loop: true; dur: 18000; easing: linear"
+                cursor-listener>
+                
+                <!-- Fallback geometry in case model doesn't load -->
+                <a-cylinder 
+                    id="fallback-model"
+                    visible="false"
+                    position="0 0 0"
+                    radius="0.5"
+                    height="1"
+                    color="#4ECDC4"
+                    shadow="cast: true">
+                </a-cylinder>
+            </a-entity>
+            
+            <!-- Model Labels -->
             <a-text 
-                value="Welcome to A-Frame!" 
-                position="-2 2 -3" 
-                color="#EC407A"
-                align="center">
+                value="Retro Sony Alarm Clock" 
+                position="-2 2 -2" 
+                color="#FFFFFF"
+                align="center"
+                font="roboto"
+                width="3">
             </a-text>
+            
+            <a-text 
+                value="7/22/2025 Model" 
+                position="2 2 -2" 
+                color="#FFFFFF"
+                align="center"
+                font="roboto"
+                width="3">
+            </a-text>
+            
+            <a-text 
+                value="Large Shell" 
+                position="0 1 -6" 
+                color="#FFFFFF"
+                align="center"
+                font="roboto"
+                width="3">
+            </a-text>
+            
+            <!-- Floating Clouds -->
+            <a-sphere 
+                position="-15 8 -10" 
+                radius="2" 
+                color="#FFFFFF"
+                opacity="0.8"
+                transparent="true"
+                animation="property: position; to: -12 8 -10; direction: alternate; loop: true; dur: 8000; easing: easeInOutSine">
+            </a-sphere>
+            
+            <a-sphere 
+                position="15 6 -15" 
+                radius="1.5" 
+                color="#FFFFFF"
+                opacity="0.7"
+                transparent="true"
+                animation="property: position; to: 18 6 -15; direction: alternate; loop: true; dur: 10000; easing: easeInOutSine">
+            </a-sphere>
+            
+            <!-- Sun -->
+            <a-sphere 
+                position="20 12 -20" 
+                radius="3" 
+                color="#FFD700"
+                animation="property: rotation; to: 0 360 0; loop: true; dur: 60000; easing: linear">
+            </a-sphere>
             
         </a-scene>
     </div>
@@ -135,3 +377,4 @@
     <script type="module" src="/main.js"></script>
 </body>
 </html>
+

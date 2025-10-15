@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#87CEEB">
+    <title>Simple A-Frame Beach Test</title>
+    <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            overflow: hidden;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        .ui-overlay {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            color: white;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px;
+            border-radius: 10px;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        .ui-overlay h1 {
+            margin: 0 0 10px 0;
+            font-size: 24px;
+        }
+        
+        .ui-overlay p {
+            margin: 0;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        #scene-container {
+            width: 100vw;
+            height: 100vh;
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="ui-overlay">
+        <h1>🏖️ Simple Beach Test</h1>
+        <p>WASD: Move • Mouse: Look • Click: Interact</p>
+        <p id="loading-status">Loading simple scene...</p>
+    </div>
+    
+    <div id="scene-container">
+        <a-scene 
+            vr-mode-ui="enabled: false" 
+            embedded 
+            background="color: #87CEEB"
+            renderer="colorManagement: true; physicallyCorrectLights: true">
+            
+            <!-- Beautiful Beach Sky -->
+            <a-sky 
+                id="beach-sky"
+                color="#87CEEB">
+            </a-sky>
+            
+            <!-- Camera -->
+            <a-camera 
+                id="camera"
+                position="0 1.6 0"
+                look-controls="enabled: true"
+                wasd-controls="enabled: true"
+                cursor="rayOrigin: mouse">
+            </a-camera>
+            
+            <!-- Beach Lighting -->
+            <a-light 
+                type="ambient" 
+                color="#FFE4B5" 
+                intensity="0.6">
+            </a-light>
+            
+            <a-light 
+                type="directional" 
+                position="5 8 -3" 
+                color="#FFFACD" 
+                intensity="1.2"
+                cast-shadow="true">
+            </a-light>
+            
+            <!-- Beach Sand -->
+            <a-plane 
+                position="0 -0.1 -4" 
+                rotation="-90 0 0" 
+                width="100" 
+                height="100" 
+                color="#F4A460"
+                shadow="receive: true">
+            </a-plane>
+            
+            <!-- Ocean Water -->
+            <a-plane 
+                position="0 -0.05 -15" 
+                rotation="-90 0 0" 
+                width="100" 
+                height="50" 
+                color="#4682B4"
+                opacity="0.8"
+                transparent="true">
+            </a-plane>
+            
+            <!-- Simple Test Cube -->
+            <a-box 
+                position="0 0.5 -3" 
+                rotation="0 45 0" 
+                color="#4CC3D9"
+                shadow="cast: true"
+                animation="property: rotation; to: 0 405 0; loop: true; dur: 10000"
+                cursor-listener>
+            </a-box>
+            
+            <!-- Simple Test Sphere -->
+            <a-sphere 
+                position="2 1 -3" 
+                radius="0.5" 
+                color="#EF2D5E"
+                shadow="cast: true"
+                animation="property: position; to: 2 1.5 -3; direction: alternate; loop: true; dur: 2000"
+                cursor-listener>
+            </a-sphere>
+            
+        </a-scene>
+    </div>
+    
+    <script type="module" src="/simple-main.js"></script>
+</body>
+</html>
